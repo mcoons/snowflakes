@@ -23,16 +23,16 @@ function preloader() {
 		var img9 = new Image();
 		var img10 = new Image();
 
-		img1.src = "url('backgrounds/bgimage-1.jpg')";
-		img2.src = "url('backgrounds/bgimage-2.jpg')";
-		img3.src = "url('backgrounds/bgimage-3.jpg')";
-		img4.src = "url('backgrounds/bgimage-4.jpg')";
-		img5.src = "url('backgrounds/bgimage-5.jpg')";
-		img6.src = "url('backgrounds/bgimage-6.jpg')";
-		img7.src = "url('backgrounds/bgimage-7.jpg')";
-		img8.src = "url('backgrounds/bgimage-8.jpg')";
-		img9.src = "url('backgrounds/bgimage-9.jpg')";
-		img10.src = "url('backgrounds/bgimage-10.jpg')";
+		img1.src = "backgrounds/bgimage-1.jpg";
+		img2.src = "backgrounds/bgimage-2.jpg";
+		img3.src = "backgrounds/bgimage-3.jpg";
+		img4.src = "backgrounds/bgimage-4.jpg";
+		img5.src = "backgrounds/bgimage-5.jpg";
+		img6.src = "backgrounds/bgimage-6.jpg";
+		img7.src = "backgrounds/bgimage-7.jpg";
+		img8.src = "backgrounds/bgimage-8.jpg";
+		img9.src = "backgrounds/bgimage-9.jpg";
+		img10.src = "backgrounds/bgimage-10.jpg";
 
 	// }
 }
