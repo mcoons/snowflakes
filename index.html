@@ -7,14 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Snowflakes</title>
     <link rel="stylesheet" type="text/css" href="index.css">
-    <!-- <link rel="preload" as="image" href="./bgimage.jpg"> -->
-
 </head>
 <body>
     <br>
-    <h1>Snowflake Simulation Overlay</h1>
-    <p>This uses a quasi particle system to simulate snowflakes.  There are random wind and accumulation changes along with random snowflake properties. </p>
-    <p>Snowflake icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 		    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 		    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
-    <script src="snowflakes.js"></script>
+    <h2>Snowflake Simulation Overlay</h2>
+    <p>This uses a quasi particle system to simulate snowfall.  There are random wind (10 sec) and accumulation (20 sec) changes along with random snowflake properties. <br><br>
+        Snowflake icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a><br>
+        Music by Kevin MacLeod from <a href="http://incompetech.com/" title="Incompetech">incompetech.com</a><br>
+        licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+    </p>
+    
+    <audio src="music/WishBackground.mp3" controls volume="0.1" autoplay>Error: your web browser does not support this audio player.</audio>
+    <script>
+        var audio = document.getElementsByTagName("audio");
+        audio[0].volume = 0.1;
+    </script>
+    <script src="SnowflakeOverlay.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
