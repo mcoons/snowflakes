@@ -1,17 +1,16 @@
-
 class SnowflakeOverlay {
     constructor() {
         this.canvas = document.createElement("canvas");
         this.canvas.id = "snowflakecanvas";
         this.canvas.style.position = "absolute";
-        this.canvas.style.zIndex = "5"; // adjust for desired effect
+        this.canvas.style.zIndex = "5"; // adjust for desired layer effect
         document.body.insertBefore(this.canvas, document.body.firstChild);
         this.canvas.style.pointerEvents = "none";
         this.ctx = this.canvas.getContext('2d');
-        this.resizeCanvasEvent(); // manually init canvas
+        this.resizeCanvasEvent(); // init canvas
 
         this.MAX_WIND_STRENGTH = 5; // +/- x
-        this.DELTA_X_CHANGE = .005; // how quickly the snowflakes adjust to the wind
+        this.DELTA_X_CHANGE = .005; // how quickly the snowflakes adjust to the wind change
         this.DELTA_WIND_CHANGE = .01; // how quickly the wind adjusts to its new direction
         this.WIND_CHANGE_INTERVAL = 10000; // milliseconds
         this.INTENSITY_CHANGE_INTERVAL = 20000; // milliseconds
@@ -33,9 +32,9 @@ class SnowflakeOverlay {
     }
 
     loop() { // main animation loop
-        if (this.snowflakes.length < this.maxFlakes && !(Date.now() % 5)) {
-            this.createSnowflake(this.snowflakes);
-        }
+        // if (this.snowflakes.length < this.maxFlakes && !(Date.now() % 5)) {
+        //     this.createSnowflake(this.snowflakes);
+        // }
         this.frameUpdate(this.ctx, this.snowflakes);
     }
 
@@ -51,7 +50,7 @@ class SnowflakeOverlay {
         flake.rotationSpeed = (Math.round(Math.random() * 10) - 5) / 300;
         flake.size = size;
         flake.speedY = 2 + Math.floor((1 + Math.random() * size / 2)) / 10;
-        flake.speedX = this.windDirection ;
+        flake.speedX = this.windDirection;
         flake.img = new Image();
         flake.img.src = "snowflakes/snowflake-" + (Math.floor(Math.random() * 20)).toString() + ".png";
         return flake;
@@ -70,6 +69,10 @@ class SnowflakeOverlay {
         let removeList = []; // used when maxFlakes decreases
         this.windDirection = this.lerp(this.windDirection, this.newWindDirection, this.DELTA_WIND_CHANGE);
 
+        if (this.snowflakes.length < this.maxFlakes && !(Date.now() % 5)) {
+            this.createSnowflake(this.snowflakes);
+        }
+        
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         snowflakes.forEach((flake, index) => {
             flake.y += flake.speedY;
@@ -108,4 +111,4 @@ class SnowflakeOverlay {
     }
 }
 
-(() => {new SnowflakeOverlay()})();
+(() => { new SnowflakeOverlay() })();
