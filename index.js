@@ -1,11 +1,34 @@
 bgindex = 0;
+bgToggle = false;
 setInterval(backgroundChange, 20000);
-backgroundChange();
+// backgroundChange();
 
 function backgroundChange(){
     let filename = "url('backgrounds/bgimage-" + bgindex.toString() + ".jpg')";
     // console.log("in background change", filename);
-    document.body.style.backgroundImage = filename;
+    // document.body.style.backgroundImage = filename;
+
+    let bgback = document.querySelector("#bgback");
+    let bgfront = document.querySelector("#bgfront");
+
+    if (bgToggle){
+        bgfront.style.opacity = "0.0";
+        bgback.style.opacity = "1.0";
+    } else {
+        bgfront.style.opacity = "1.0";
+        bgback.style.opacity = "0.0";        
+    }
+
+    setTimeout( () => {
+        if (!bgToggle) {
+            bgfront.style.backgroundImage = filename;
+        } else {
+            bgback.style.backgroundImage = filename;
+        }
+    }, 5000);
+
+    bgToggle = !bgToggle;
+
     bgindex++;
     if (bgindex === 11) bgindex = 0;
 }

@@ -22,9 +22,9 @@ class SnowflakeOverlay {
 
         window.addEventListener('resize', e => (this.resizeCanvasEvent)(), false);
 
-        setInterval(w => (this.windChange)(), this.WIND_CHANGE_INTERVAL);
-        setInterval(i => (this.intensityChange)(), this.INTENSITY_CHANGE_INTERVAL);
-        setInterval(l => (this.loop)(), 20);
+        setInterval(() => (this.windChange)(), this.WIND_CHANGE_INTERVAL);
+        setInterval(() => (this.intensityChange)(), this.INTENSITY_CHANGE_INTERVAL);
+        setInterval(() => (this.loop)(), 20);
     }
 
     lerp(start, end, amt) {
@@ -32,14 +32,7 @@ class SnowflakeOverlay {
     }
 
     loop() { // main animation loop
-        // if (this.snowflakes.length < this.maxFlakes && !(Date.now() % 5)) {
-        //     this.createSnowflake(this.snowflakes);
-        // }
         this.frameUpdate(this.ctx, this.snowflakes);
-    }
-
-    createSnowflake(snowflakes) {
-        snowflakes.push(this.initializeSnowflake({}))
     }
 
     initializeSnowflake(flake) {
@@ -70,9 +63,9 @@ class SnowflakeOverlay {
         this.windDirection = this.lerp(this.windDirection, this.newWindDirection, this.DELTA_WIND_CHANGE);
 
         if (this.snowflakes.length < this.maxFlakes && !(Date.now() % 5)) {
-            this.createSnowflake(this.snowflakes);
+            snowflakes.push(this.initializeSnowflake({}));
         }
-        
+
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         snowflakes.forEach((flake, index) => {
             flake.y += flake.speedY;
@@ -93,7 +86,7 @@ class SnowflakeOverlay {
         });
 
         removeList.reverse().forEach(index => {
-            snowflakes.splice(index, 1)
+            snowflakes.splice(index, 1);
         });
     }
 
@@ -103,11 +96,11 @@ class SnowflakeOverlay {
     }
 
     windChange() {
-        this.newWindDirection = Math.round(Math.random() * 2 * this.MAX_WIND_STRENGTH - this.MAX_WIND_STRENGTH)
+        this.newWindDirection = Math.round(Math.random() * 2 * this.MAX_WIND_STRENGTH - this.MAX_WIND_STRENGTH);
     }
 
     intensityChange() {
-        this.maxFlakes = Math.round(this.canvas.width / (1 + Math.random() * 15))
+        this.maxFlakes = Math.round(this.canvas.width / (1 + Math.random() * 15));
     }
 }
 
