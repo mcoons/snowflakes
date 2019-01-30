@@ -9,8 +9,8 @@ class SnowflakeOverlay {
         this.context2D = this.canvas.getContext('2d');
         this.resizeCanvasEvent(); // init canvas
 
-        this.MIN_FLAKE_SIZE = 10; // px
-        this.MAX_FLAKE_SIZE = 30; // px
+        this.MIN_FLAKE_SIZE = 10; // diameter px
+        this.MAX_FLAKE_SIZE = 30; // diameter px
         this.MAX_WIND_STRENGTH = 4; // +/- x
         this.DELTA_X_CHANGE = .007; // how quickly the snowflakes adjust to the wind change
         this.DELTA_WIND_CHANGE = .01; // how quickly the wind adjusts to its new direction
@@ -80,7 +80,7 @@ class SnowflakeOverlay {
         } else { // fallback for missing img src files
             context2D.fillStyle = "white"; 
             context2D.beginPath(); 
-            context2D.arc(flake.x,flake.y, flake.size/4, 0, Math.PI*2); 
+            context2D.arc(flake.x, flake.y, flake.size/4, 0, Math.PI*2); 
             context2D.closePath(); 
             context2D.fill(); 
         }
@@ -96,7 +96,7 @@ class SnowflakeOverlay {
             snowflakes.push(this.initializeSnowflake({}));
         }
 
-        // calculate and render new frame
+        // update and draw snowflakes
         context2D.clearRect(0, 0, this.canvas.width, this.canvas.height);
         snowflakes.forEach((flake, index) => {
             flake.y += flake.speedY;
@@ -107,11 +107,11 @@ class SnowflakeOverlay {
             flake.x = (flake.x > this.canvas.width + flake.size/2 + 1) ? -flake.size/2 : flake.x;
             flake.x = (flake.x < -flake.size/2 -1) ? this.canvas.width + flake.size/2 : flake.x;
             
-            // update flake rotation keeping it between 0-2PI
+            // update flake rotation wrapping it between 0-2PI
             flake.rotation += flake.rotationSpeed;
             flake.rotation = (Math.abs(flake.rotation) > 2 * Math.PI) ? 0 : flake.rotation;
 
-            // reset snowflakes that fall off canvas
+            // reset snowflakes that fall off bottom of canvas
             if (flake.y > this.canvas.height) {
                 this.initializeSnowflake(flake);
                 
@@ -143,4 +143,5 @@ class SnowflakeOverlay {
     }
 }
 
-(() => { new SnowflakeOverlay() })();
+(() => new SnowflakeOverlay())();
+// (() => { new SnowflakeOverlay() })();
