@@ -1,3 +1,7 @@
+html {
+
+    background-color: lightslategray;
+}
 
 html,body{
     height:100vh;
@@ -55,6 +59,7 @@ i {
     background-size: cover;
     background-position: center;
     transition: 5s;
+    z-index: -1000;
 }
 
 #bgback {
