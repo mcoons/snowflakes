@@ -22,39 +22,28 @@ class SnowflakeOverlay {
         this.windDirection = 0;
         this.newWindDirection = 0;
         this.maxFlakes = this.canvas.width / 10;
+        // this.maxFlakes = 1000;
+        this.lastFrameTime = Date.now();
+        this.frameTimes = [];
 
-        this.preloadSnowflakes();
+        this.preloadSnowflakes(this.snowflakeImgSources);
 
         window.addEventListener('resize', () => (this.resizeCanvasEvent)(), false);
-
-        setInterval(() => (this.mainLoop)(), 20);
-        setInterval(() => (this.windChange)(), this.WIND_CHANGE_INTERVAL);
-        setInterval(() => (this.intensityChange)(), this.INTENSITY_CHANGE_INTERVAL);
+        this.windInterval = setInterval(() => (this.changeWind)(), this.WIND_CHANGE_INTERVAL);
+        this.intensityInterval = setInterval(() => (this.changeIntensity)(), this.INTENSITY_CHANGE_INTERVAL);
+        
+        window.requestAnimationFrame(this.mainLoop.bind(this));
     }
 
-    preloadSnowflakes(){
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    preloadSnowflakes(imgSources){
         for (let index = 0; index < 20; index++) {
-            this.snowflakeImgSources[index] = new Image();
-            this.snowflakeImgSources[index].onload = this.imgSuccess;
-            this.snowflakeImgSources[index].onerror = this.imgError;   
-            this.snowflakeImgSources[index].src = `snowflakes/snowflake-${index}.png`;
+            imgSources[index] = new Image();            
+            imgSources[index].onload = function(){ this.imgError = 0 };
+            imgSources[index].onerror = function(){ this.imgError = -1 };   
+            imgSources[index].src = `snowflakes/snowflake-${index}.png`;
         }
-    }
-
-    imgSuccess(){
-        this.imgError = "0";
-    }
-
-    imgError(){
-        this.imgError = "-1";
-    }
-
-    mainLoop() { 
-        this.updateFrame(this.context2D, this.snowflakes);
-    }
-
-    lerp(start, end, amt) {
-        return (1 - amt) * start + amt * end;
     }
 
     initializeSnowflake(flake) {
@@ -70,9 +59,32 @@ class SnowflakeOverlay {
         return flake;
     }
 
+    updateSnowflake(flake, flakeCount, removeList, index) {
+        flake.y += flake.speedY;
+        flake.speedX = this.lerp(flake.speedX, this.windDirection, this.DELTA_X_CHANGE);
+        flake.x += flake.speedX;
+
+        flake.x = (flake.x > this.canvas.width + flake.size/2 + 1) ? -flake.size/2 : flake.x;
+        flake.x = (flake.x < -flake.size/2 -1) ? this.canvas.width + flake.size/2 : flake.x;
+        
+        flake.rotation += flake.rotationSpeed;
+        flake.rotation = (Math.abs(flake.rotation) > 2 * Math.PI) ? 0 : flake.rotation;
+
+        // reset snowflakes that fall off bottom of the canvas
+        if (flake.y > this.canvas.height) {
+            
+            // periodically mark any extra snowflakes for removal
+            if (flakeCount > this.maxFlakes && !(Date.now() % 3)) {
+                removeList.push(index);
+            } else {
+                this.initializeSnowflake(flake);
+            }
+        }
+    }
+
     drawSnowflake(context2D, flake) {
         context2D.save();
-        if (flake.img.imgError != "-1"){
+        if (flake.img.imgError === 0){
             context2D.translate(flake.x, flake.y);
             context2D.rotate(flake.rotation);
             context2D.drawImage(flake.img, -flake.size / 2, -flake.size / 2, flake.size, flake.size);
@@ -87,46 +99,47 @@ class SnowflakeOverlay {
         context2D.restore();
     }
 
+    addSnowflake(snowflakes) {
+        if (snowflakes.length < this.maxFlakes && !(Date.now() % 3)) {
+            snowflakes.push(this.initializeSnowflake({}));
+        }
+    }
+
+    removeSnowflakes(removeList, snowflakes) {
+        removeList.reverse().forEach(index => {
+            snowflakes.splice(index, 1);
+        });
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    mainLoop() { 
+        this.updateFrame(this.context2D, this.snowflakes);
+
+        // this.calculateFPS();
+
+        window.requestAnimationFrame(this.mainLoop.bind(this));
+    }
+
     updateFrame(context2D, snowflakes) {
         let removeList = []; // used when maxFlakes decreases
         this.windDirection = this.lerp(this.windDirection, this.newWindDirection, this.DELTA_WIND_CHANGE);
 
-        // periodically add new snowflakes if needed
-        if (this.snowflakes.length < this.maxFlakes && !(Date.now() % 5)) {
-            snowflakes.push(this.initializeSnowflake({}));
-        }
+        this.addSnowflake(snowflakes);
 
-        // update and draw snowflakes
-        context2D.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        context2D.clearRect(0, 0, context2D.canvas.width, context2D.canvas.height);
         snowflakes.forEach((flake, index) => {
-            flake.y += flake.speedY;
-            flake.speedX = this.lerp(flake.speedX, this.windDirection, this.DELTA_X_CHANGE);
-            flake.x += flake.speedX;
-            
-            // wrap X of snowflakes that leave canvas
-            flake.x = (flake.x > this.canvas.width + flake.size/2 + 1) ? -flake.size/2 : flake.x;
-            flake.x = (flake.x < -flake.size/2 -1) ? this.canvas.width + flake.size/2 : flake.x;
-            
-            // update flake rotation wrapping it between 0-2PI
-            flake.rotation += flake.rotationSpeed;
-            flake.rotation = (Math.abs(flake.rotation) > 2 * Math.PI) ? 0 : flake.rotation;
-
-            // reset snowflakes that fall off bottom of canvas
-            if (flake.y > this.canvas.height) {
-                this.initializeSnowflake(flake);
-                
-                // periodically mark any extra snowflakes for removal
-                if (snowflakes.length > this.maxFlakes && !(Date.now() % 3)) {
-                    removeList.push(index);
-                }
-            }
+            this.updateSnowflake(flake, snowflakes.length, removeList, index);
             this.drawSnowflake(context2D, flake);
         });
 
-        // remove extra snowflakes that were marked
-        removeList.reverse().forEach(index => {
-            snowflakes.splice(index, 1);
-        });
+        this.removeSnowflakes(removeList, snowflakes);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    lerp(start, end, amt) {
+        return (1 - amt) * start + amt * end;
     }
 
     resizeCanvasEvent() {
@@ -134,14 +147,28 @@ class SnowflakeOverlay {
         this.canvas.height = window.innerHeight;
     }
 
-    windChange() {
+    calculateFPS() {
+        let now = Date.now();
+        let difference = now - this.lastFrameTime;
+        this.frameTimes.push(difference);
+        if (this.frameTimes.length > 100) this.frameTimes.shift();
+        let total = this.frameTimes.reduce( (a,e) => a+e, 0);
+        console.log(`${this.snowflakes.length} snowflakes @ ${Math.round(this.frameTimes.length/total*1000)}FPS`);
+        this.lastFrameTime = now;
+    }
+
+    changeWind() {
         this.newWindDirection = Math.round(Math.random() * 2 * this.MAX_WIND_STRENGTH - this.MAX_WIND_STRENGTH);
     }
 
-    intensityChange() {
+    changeIntensity() {
         this.maxFlakes = Math.round(this.canvas.width / (1 + Math.random() * 15));
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 (() => new SnowflakeOverlay())();
-// (() => { new SnowflakeOverlay() })();
+
+// sfo = new SnowflakeOverlay();
+// console.log(sfo)
