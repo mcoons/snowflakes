@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An example of my Snowflake overlay">
+    <meta name="author" content="Michael Coons">
+    <meta name="keywords" content="HTML,CSS,JavaScript,Overlay,Canvas,Snowflakes">
+    
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Snowflakes</title>
     <link rel="stylesheet" type="text/css" href="index.css">
@@ -11,16 +15,16 @@
 <body>
     <div class="bg" id="bgback"></div>
     <div class="bg" id="bgfront"></div>
-    <br>
-    <h2>Snowflake Simulation Overlay</h2>
-    <div id="credits"> <i class="arrow down"></i> CREDITS <i class="arrow down"></i> <br><br>
+    <header>
+        <h2>Snowflake Simulation Overlay</h2>
+    </header>
+    <summary id="credits"> <h4><i class="arrow down"></i> CREDITS <i class="arrow down"></i></h4>
         This uses a quasi particle system to simulate snowfall.  There are random wind (10 sec) and intensity (20 sec) changes along with random snowflake properties. <br><br>
         Photos by Michael Coons <a href="http://www.michaelcoons.tech" title="Michael Coons">http://www.michaelcoons.tech</a><br>
         Snowflake icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a><br>
         Music by Kevin MacLeod from <a href="http://incompetech.com/" title="Incompetech">incompetech.com</a><br>
         Licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
-    </div>
-     
+    </summary>
     <audio src="music/WishBackground.mp3" controls volume="0.1" autoplay>Error: your web browser does not support this audio player.</audio>
     <script>
         var audio = document.getElementsByTagName("audio");

@@ -1,5 +1,4 @@
 html {
-
     background-color: lightslategray;
 }
 
@@ -7,6 +6,7 @@ html,body{
     height:100vh;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 h2 {
@@ -17,6 +17,12 @@ h2 {
     text-align: center;
     background-color: rgba(100, 100, 100, .5);
     border-radius: 10px;
+}
+
+h4 {
+    margin-top:0;
+    margin-bottom: 5px;
+    padding: 0;
 }
 
 #credits {

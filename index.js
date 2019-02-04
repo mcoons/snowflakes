@@ -7,29 +7,28 @@ preloader();
 setInterval(backgroundChange, 20000);
 
 function backgroundChange(){
-    let backCanvas = document.querySelector("#bgback");
-    let frontCanvas = document.querySelector("#bgfront");
+    let backDiv = document.querySelector("#bgback");
+    let frontDiv = document.querySelector("#bgfront");
 
     if (backgroundToggle){
-        frontCanvas.style.opacity = "0.0";
-        backCanvas.style.opacity = "1.0";
+        frontDiv.style.opacity = "0.0";
+        backDiv.style.opacity = "1.0";
     } else {
-        frontCanvas.style.opacity = "1.0";
-        backCanvas.style.opacity = "0.0";        
+        frontDiv.style.opacity = "1.0";
+        backDiv.style.opacity = "0.0";        
     }
 
     setTimeout( () => {
         if (!backgroundToggle) {
-            frontCanvas.style.backgroundImage = `url('${img[imageNumber].src}')`;
+            frontDiv.style.backgroundImage = `url('${img[imageNumber].src}')`;
         } else {
-            backCanvas.style.backgroundImage = `url('${img[imageNumber].src}')`;
+            backDiv.style.backgroundImage = `url('${img[imageNumber].src}')`;
         }
     }, 5000);
 
     backgroundToggle = !backgroundToggle;
 
-    imageNumber++;
-    if (imageNumber > MAX_IMAGE_NUMBER) imageNumber = 0;
+    imageNumber = imageNumber === MAX_IMAGE_NUMBER ? 0 : imageNumber+1;
 }
 
 function preloader() {
